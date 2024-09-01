@@ -27,7 +27,28 @@ namespace Cadetes
 
         public int JornalACobrar()
         {
-            return 500* (ListadoPedidos.Count(a=> a.Estado == Estados.Entregado));
+            return 500* ListadoPedidos.Count(a=> a.Estado == Estados.Entregado);
         }
+
+        public void AgregarPedido(Pedidos pedido)
+        {
+            pedido.Estado = Estados.EnCamino;
+            ListadoPedidos.Add(pedido);
+        }
+        public void EliminarPedido(Pedidos pedido, int razon)
+        {
+            var PedidoAQuitar = ListadoPedidos.FirstOrDefault(a => a.Nro == pedido.Nro);
+            if(PedidoAQuitar!=null){
+                if (razon==0) //Cancelar
+                {
+                    PedidoAQuitar.Estado = Estados.Cancelado;
+                }
+                else if (razon == 1) //Entregado
+                {
+                    PedidoAQuitar.Estado = Estados.Entregado;
+                }
+            }
+        }
+
     }
 }

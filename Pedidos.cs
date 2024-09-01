@@ -39,6 +39,7 @@ namespace Pedido
     public enum Estados {
         Preparando, 
         EnCamino, 
-        Entregado
+        Entregado,
+        Cancelado
     }
 }
