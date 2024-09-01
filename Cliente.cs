@@ -1,3 +1,5 @@
+using System.IO.Compression;
+
 namespace Clientes
 {
     class Cliente
@@ -10,7 +12,7 @@ namespace Clientes
         public string nombre {get => Nombre;}
         public string direccion{get=>Direccion;}
         public int telefono{get=>Telefono;}
-        public string datosReferenciaDireccion{get=>DatosReferenciaDireccion;}
+        public string datosReferenciaDireccion{get=>DatosReferenciaDireccion; set => datosReferenciaDireccion = value;}
 
         public Cliente(string nombre, string direccion, int telefono, string referencias)
         {
