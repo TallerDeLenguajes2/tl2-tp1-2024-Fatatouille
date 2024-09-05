@@ -1,5 +1,6 @@
 using Cadetes;
 using Pedido;
+using Clientes;
 
 namespace Cadeteria
 {
@@ -46,6 +47,28 @@ namespace Cadeteria
         public void DespedirCadete(Cadete cadete)
         {
             ListadoCadetes.Remove(cadete);
+        }
+
+        public Pedidos AltaPedido()
+        {
+            int NroPedido = random.Next(100);
+
+            Console.WriteLine("Observaciones: ");
+            string obs = Console.ReadLine();
+
+            Console.WriteLine("Nombre: ");
+            string nombre = Console.ReadLine();
+
+            Console.WriteLine("Direccion: ");
+            string dir = Console.ReadLine();
+
+            Console.WriteLine("Telefono: ");
+            int tel = Convert.ToInt32(Console.ReadLine());
+
+            Console.WriteLine("Referencias de su direccion: ");
+            string RefDir = Console.ReadLine();
+
+            return new Pedidos(NroPedido, obs, nombre, dir, tel, RefDir);
         }
     }
 }
