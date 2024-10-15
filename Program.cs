@@ -1,37 +1,43 @@
-﻿﻿using Cadeteria;
-using Cadetes;
+﻿using System.Runtime.InteropServices;
+using Cadeteria;
+using datos;
 using Pedido;
 
 Cadeterias miCadeteria = new Cadeterias();
 List<Pedidos> pedidosSinAsignar = new List<Pedidos>();
 List<Pedidos> pedidosAsignados = new List<Pedidos>();
+AccesoADatos accesoDatos;
+string extension;
+string carpeta;
 
-miCadeteria = LecturaCsv.TraerDatosDeCsv(@"D:\Facultad\Taller de Lenguajes II\tl2-tp1-2024-Fatatouille\CSV\Cadetes.csv", @"D:\Facultad\Taller de Lenguajes II\tl2-tp1-2024-Fatatouille\CSV\Cadeteria.csv", miCadeteria);
+Console.WriteLine("1. CSV");
+Console.WriteLine("2. JSON");
+Console.Write("\nSeleccione el tipo de acceso a datos:");
+int opcion1 = int.Parse(Console.ReadLine());
+
+switch (opcion1)
+{
+    case 1:
+        accesoDatos = new AccesoCSV();
+        extension = ".csv";
+        carpeta = "CSV";
+        break;
+    case 2:
+        accesoDatos = new AccesoJSON();
+        extension = ".json";
+        carpeta = "JSON";
+        break;
+    default:
+        Console.WriteLine("Opción no válida. Se utilizará acceso CSV por defecto.");
+        accesoDatos = new AccesoCSV();
+        extension = ".csv";
+        carpeta = "CSV";
+        break;
+}
+
+miCadeteria = accesoDatos.CargarCadeteria(@$"D:\Facultad\Taller de Lenguajes II\tl2-tp1-2024-Fatatouille\{carpeta}\Cadetes{extension}", $@"D:\Facultad\Taller de Lenguajes II\tl2-tp1-2024-Fatatouille\{carpeta}\Cadeteria{extension}", miCadeteria);
 
 Console.WriteLine($"{miCadeteria.nombre}");
-
-foreach (var x in miCadeteria.listadoCadetes)
-{
-    Console.WriteLine("Informacion de Cadete\n");
-    Console.WriteLine("ID: " + x.id);
-    Console.WriteLine("Nombre: " + x.nombre);
-    Console.WriteLine("Domicilio: " + x.direccion);
-    Console.WriteLine("Telefono: " + x.telefono);
-    foreach (var y in x.listadoPedidos)
-    {
-        Console.WriteLine("Informacion del Pedido\n");
-        Console.WriteLine("Pedido Nro: " + y.Nro);
-        Console.WriteLine("Observacion del Pedido: " + y.Obs);
-        Console.WriteLine("Informacion Cliente \n");
-        Console.WriteLine("Nombre: " + y.Cliente.nombre);
-        Console.WriteLine("Direccion: " + y.Cliente.direccion);
-        Console.WriteLine("Telefono: " + y.Cliente.telefono);
-        Console.WriteLine("Alguna referencia para ubicar al cadete: " + y.Cliente.datosReferenciaDireccion);
-        Console.WriteLine("\nEstado del Pedido: " + y.Estado);
-        Console.WriteLine("");
-        pedidosAsignados.Add(y);
-    }
-}
 
 int opcion;
 do
@@ -40,48 +46,48 @@ do
     Console.WriteLine("2. Asignar un pedido");
     Console.WriteLine("3. Cambiar de estado un pedido");
     Console.WriteLine("4. Reasginar el pedido a otro cadete");
-    Console.WriteLine("5. Salir"); // Cambié el texto de opción "4" a "5" para salir
+    Console.WriteLine("5. Leer cadetes con pedidos");
+    Console.WriteLine("6. Leer Todos los cadetes");
+    Console.WriteLine("7. Salir"); // Cambié el texto de opción "4" a "5" para salir
     opcion = int.Parse(Console.ReadLine());
 
-} while (opcion < 1 || opcion > 5); // Cambié a 1 para que las opciones sean válidas desde 1 a 5
 
 switch (opcion)
 {
     case 1:
-        Pedidos pedidoCargado = miCadeteria.AltaPedido();
-        pedidosSinAsignar.Add(pedidoCargado);
+        var pedidoCargado = miCadeteria.AltaPedido();
+        miCadeteria.ListaPedido.Add(pedidoCargado);
+
+        
         break;
     case 2:
-        if (pedidosSinAsignar.Count > 0) // Cambié null check a Count check para verificar si hay elementos
-        {
-            miCadeteria.AsignarPedido(pedidosSinAsignar[0]);
-            pedidosSinAsignar.RemoveAt(0);
-            Console.WriteLine("Pedido asignado con exito");
-        }
-        else
-        {
-            Console.WriteLine("Sin pedidos para asignar");
-        }
+
+            Console.WriteLine("Ingresar el id del pedido a asignar");
+            int idPedidoRequerido1 = int.Parse(Console.ReadLine());
+            Console.WriteLine("Ingresar el id del Cadete a asignar el pedido");
+            int idCadeteRequerido = int.Parse(Console.ReadLine());
+            miCadeteria.AsignarPedido(idCadeteRequerido, idPedidoRequerido1);
+
         break;
     case 3:
-        Console.WriteLine("Ingresar el numero del pedido a  buscar (42, 43, 44)");
+        Console.WriteLine("Ingresar el numero del pedido a  buscar");
         int nPed = int.Parse(Console.ReadLine());
 
         Pedidos pedidoEncontrado = null; // Inicializo la variable
 
         // Uso de LINQ fuera del bucle
-        pedidoEncontrado = pedidosAsignados.FirstOrDefault(c => c.Nro == nPed);
+        pedidoEncontrado = miCadeteria.ListaPedido.FirstOrDefault(c => c.Nro == nPed);
         if (pedidoEncontrado != null) // Verifica si se encontró el pedido antes de cambiar su estado
         {
             if (pedidoEncontrado.Estado == Estados.Entregado)
             {
                 pedidoEncontrado.Estado = Estados.EnCamino;
-                LecturaCsv.AgregarPedidoAlCSV(@"D:\Facultad\Taller de Lenguajes II\tl2-tp1-2024-Fatatouille\CSV\Cadetes.csv", pedidoEncontrado);
+                
             }
             else
             {
                 pedidoEncontrado.Estado = Estados.Entregado;
-                LecturaCsv.AgregarPedidoAlCSV(@"D:\Facultad\Taller de Lenguajes II\tl2-tp1-2024-Fatatouille\CSV\Cadetes.csv", pedidoEncontrado);
+                
             }
         }
         else
@@ -90,18 +96,51 @@ switch (opcion)
         }
         break;
     case 4:
-
-        Console.WriteLine("Ingresar numero de pedido a cambiar de cadete");
-        int nPedN = int.Parse(Console.ReadLine());
-
-        Console.WriteLine("Ingresar ID del cadete a entregar pedido");
-        int ID = int.Parse(Console.ReadLine());
-
         // Uso de LINQ fuera del bucle
-        Pedidos pedidoEncontradoCambiar = pedidosAsignados.FirstOrDefault(c => c.Nro == nPedN);
-        Cadete cadeteEncontrado = miCadeteria.listadoCadetes.FirstOrDefault(x => x.id == ID);
-
-        miCadeteria.ReasignarCadete(pedidoEncontradoCambiar, cadeteEncontrado);
+        Console.WriteLine("Ingresar el id del pedido a asignar");
+        int idPedidoRequerido = int.Parse(Console.ReadLine());
+        Pedidos pedidoACambiar = miCadeteria.ListaPedido.FirstOrDefault(x => x.Nro == idPedidoRequerido);
+        miCadeteria.ReasignarCadete(pedidoACambiar);
 
     break;
+    case 5:
+        
+
+
+        foreach (var pedido in miCadeteria.ListaPedido)
+        {
+            Console.WriteLine("Informacion de Cadete\n");
+            Console.WriteLine("ID: " + pedido.cadete.id);
+            Console.WriteLine("Nombre: " + pedido.cadete.nombre);
+            Console.WriteLine("Domicilio: " + pedido.cadete.direccion);
+            Console.WriteLine("Telefono: " + pedido.cadete.telefono);
+            Console.WriteLine("Informacion del Pedido\n");
+            Console.WriteLine("Pedido Nro: " + pedido.Nro);
+            Console.WriteLine("Observacion del Pedido: " + pedido.Obs);
+            Console.WriteLine("Informacion Cliente \n");
+            Console.WriteLine("Nombre: " + pedido.Cliente.nombre);
+            Console.WriteLine("Direccion: " + pedido.Cliente.direccion);
+            Console.WriteLine("Telefono: " + pedido.Cliente.telefono);
+            Console.WriteLine("Alguna referencia para ubicar al cadete: " + pedido.Cliente.datosReferenciaDireccion);
+            Console.WriteLine("\nEstado del Pedido: " + pedido.Estado);
+        }
+
+
+        
+    break;
+    case 6:
+        foreach (var x in miCadeteria.listadoCadetes)
+        {
+            Console.WriteLine("Informacion de Cadete\n");
+            Console.WriteLine("ID: " + x.id);
+            Console.WriteLine("Nombre: " + x.nombre);
+            Console.WriteLine("Domicilio: " + x.direccion);
+            Console.WriteLine("Telefono: " + x.telefono);
+        }
+    break;
+    default:
+        Console.WriteLine("Opcion no valida");
+        break;
 }
+
+} while (opcion != 7); 
