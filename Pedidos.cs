@@ -2,7 +2,7 @@ using Clientes;
 
 namespace Pedido
 {
-    class Pedidos
+    public class Pedidos
     {
         private int nro;
         private string obs;

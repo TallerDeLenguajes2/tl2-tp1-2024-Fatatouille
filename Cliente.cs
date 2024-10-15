@@ -2,7 +2,7 @@ using System.IO.Compression;
 
 namespace Clientes
 {
-    class Cliente
+    public class Cliente
     {
         private string Nombre;
         private string Direccion;

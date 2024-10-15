@@ -4,18 +4,18 @@ using Clientes;
 
 namespace Cadeteria
 {
-    class Cadeteria
+    public class Cadeterias
     {
         private string Nombre;
         private int Telefono;
         private List<Cadete> ListadoCadetes;
         Random random = new Random();
 
-        public string nombre {get => Nombre;}
-        public int telefono {get=>Telefono;}
+        public string nombre {get => Nombre; set => Nombre= value;}
+        public int telefono {get=>Telefono; set => Telefono= value;}
         public List<Cadete> listadoCadetes{get=> ListadoCadetes;}
 
-        public Cadeteria(string nombre, int telefono, List<Cadete> cadetes)
+        public Cadeterias(string nombre, int telefono, List<Cadete> cadetes)
         {
             this.Nombre = nombre;
             this.Telefono = telefono;
