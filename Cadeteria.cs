@@ -13,13 +13,20 @@ namespace Cadeteria
 
         public string nombre {get => Nombre; set => Nombre= value;}
         public int telefono {get=>Telefono; set => Telefono= value;}
-        public List<Cadete> listadoCadetes{get=> ListadoCadetes;}
+        public List<Cadete> listadoCadetes{get=> ListadoCadetes; set => ListadoCadetes = value;}
 
         public Cadeterias(string nombre, int telefono, List<Cadete> cadetes)
         {
             this.Nombre = nombre;
             this.Telefono = telefono;
             this.ListadoCadetes = cadetes;
+        }
+
+        public Cadeterias()
+        {
+            this.Nombre = "Cadetería sin nombre"; // Valor por defecto
+            this.Telefono = 0; // Valor por defecto
+            this.ListadoCadetes = new List<Cadete>(); // Lista vacía
         }
 
         public void AsignarPedido(Pedidos pedido){

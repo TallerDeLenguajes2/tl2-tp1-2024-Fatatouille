@@ -30,23 +30,23 @@ public class LecturaCsv
                 string[] fila = linea.Split(separador);
 
                 // Crear instancia de Cliente
-                Cliente cliente = new Cliente(fila[6], fila[7], fila[8], fila[9]);
+                Cliente cliente = new Cliente(fila[6], fila[7], Convert.ToInt32(fila[8]), fila[9]);
 
                 // Crear instancia de Pedido con manejo seguro del estado
-                Pedidos.estado estado;
+                Estados estado;
                 if (Enum.TryParse(fila[10], true, out estado))
                 {
-                    Pedidos pedido = new Pedidos(int.Parse(fila[4]), fila[5], cliente, estado);
+                    Pedidos pedido = new Pedidos(int.Parse(fila[4]), fila[5], fila[1], fila[2], Convert.ToInt32(fila[3]), "");
 
                     // Crear o agregar pedido a la instancia de Cadete
                     int idCadete = int.Parse(fila[0]);
-                    Cadete cadeteExistente = miCadeteria.listadoCadetes.FirstOrDefault(c => c.Id == idCadete);
+                    Cadete cadeteExistente = miCadeteria.listadoCadetes.FirstOrDefault(c => c.id == idCadete);
 
                     if (cadeteExistente == null)
                     {
-                        Cadete nuevoCadete = new Cadete(idCadete, fila[1], fila[2], fila[3]);
+                        Cadete nuevoCadete = new Cadete(idCadete, fila[1], fila[2], Convert.ToInt32(fila[3]));
                         nuevoCadete.AgregarPedido(pedido);
-                        miCadeteria.ListaCadete.Add(nuevoCadete);
+                        miCadeteria.listadoCadetes.Add(nuevoCadete);
                     }
                     else
                     {
