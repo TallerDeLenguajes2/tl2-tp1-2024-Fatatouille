@@ -23,23 +23,29 @@ namespace Cadeteria
             this.listaPedido = new List<Pedidos>();
         }
 
-        public void AsignarPedido(int idCadete, int idPedido){
+        public bool AsignarPedido(int idCadete, int idPedido){
             var pedido = listaPedido.FirstOrDefault(x => x.Nro == idPedido);
             var cadete = ListadoCadetes.FirstOrDefault(x => x.id == idCadete);
 
             if(pedido != null && cadete != null){
                 pedido.cadete = cadete;
 
-                Console.WriteLine($"El pedido {pedido.Nro} fue asignado al cadete {cadete.nombre}");
+                return true;
             }
+            return false;
         }
-        public void ReasignarCadete(Pedidos pedido)
+        public bool ReasignarCadete(Pedidos pedido)
         {
             Cadete nCadete = ListadoCadetes[random.Next(ListadoCadetes.Count)];
-            Console.WriteLine($"{nCadete.nombre} nombre del nuevo cadete");
+
+            if (nCadete == null)
+            {
+                return false;
+            }
 
             pedido.cadete = nCadete;
-            Console.WriteLine($"El pedido fue reasigando al cadete {nCadete.nombre}");
+
+            return true;
         }
         public void AgregarCadete(Cadete cadete)
         {

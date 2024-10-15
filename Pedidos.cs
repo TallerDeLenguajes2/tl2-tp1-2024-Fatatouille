@@ -26,17 +26,14 @@ namespace Pedido
             Cadete = cadete;
         }
 
-        public void VerDireccionCliente()
+        public string VerDireccionCliente(Cliente cliente)
         {
-            Console.WriteLine($"Dirección: {cliente.direccion}");
-            Console.WriteLine($"Referencias: {cliente.datosReferenciaDireccion}");
+            return cliente.direccion;
         }
 
-        public void VerDatosCliente()
+        public string VerDatosCliente(Cliente cliente)
         {
-            Console.WriteLine($"Cliente: {cliente.nombre}");
-            Console.WriteLine($"Direccion: {cliente.direccion}");
-            Console.WriteLine($"Telefono: {cliente.telefono}");
+            return cliente.nombre+", "+cliente.telefono+", "+cliente.datosReferenciaDireccion;
         }
 
     }
